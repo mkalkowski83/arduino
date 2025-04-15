@@ -1,0 +1,6 @@
+# Ignore library folder
+librarues/*
+# Don't ignore utils directory
+!librarues/utils/ 
+**/.idea/
+.vscode/*
