@@ -1,0 +1,80 @@
+                    4-Digit 7-Segment Display (Common Anode)
+          ________________________________________________
+         |                                                |
+         |   DIG1        DIG2        DIG3        DIG4    |
+         |    a          a           a           a        |
+         |  ─────       ─────      ─────       ─────     |
+     f   | │     │     │     │    │     │     │     │  b |
+         | │     │     │     │    │     │     │     │    |
+         |  ─────  g    ─────      ─────       ─────     |
+     e   | │     │     │     │    │     │     │     │  c |
+         | │     │     │     │    │     │     │     │    |
+         |  ─────  •dp  ─────      ─────       ─────     |
+         |    d          d           d           d        |
+         |                                                |
+         |________________________________________________|
+
+Widok pinów / Pin view:
+(widok z przodu wyświetlacza / front view of display)
+
+          1   2   3   4   5   6
+          ●   ●   ●   ●   ●   ●
+          │   │   │   │   │   │
+    ┌─────────────────────────────┐
+    │     WYŚWIETLACZ             │
+    │     DISPLAY                 │
+    └─────────────────────────────┘
+          │   │   │   │   │   │
+          ●   ●   ●   ●   ●   ●
+          7   8   9  10  11  12
+
+Opis pinów / Pin description:
+Górny rząd / Top row:
+ 1 - Segment E     - Segment dolny lewy / Bottom left segment
+ 2 - Segment D     - Segment dolny / Bottom segment
+ 3 - Decimal Point - Punkt dziesiętny / Decimal point
+ 4 - Segment C     - Segment dolny prawy / Bottom right segment
+ 5 - Segment G     - Segment środkowy / Middle segment
+ 6 - DIG4         - Wspólna anoda cyfry 4 / Common anode for digit 4
+
+Dolny rząd / Bottom row:
+ 7 - Segment B     - Segment górny prawy / Top right segment
+ 8 - DIG3         - Wspólna anoda cyfry 3 / Common anode for digit 3
+ 9 - DIG2         - Wspólna anoda cyfry 2 / Common anode for digit 2
+10 - Segment F     - Segment górny lewy / Top left segment
+11 - Segment A     - Segment górny / Top segment
+12 - DIG1         - Wspólna anoda cyfry 1 / Common anode for digit 1
+
+Połączenia z Arduino / Arduino connections:
+- DIG1 (pin 12) -> przez rezystor 220Ω do Arduino PIN 12 / through 220Ω resistor to Arduino PIN 12
+- DIG2 (pin 9)  -> przez rezystor 220Ω do Arduino PIN 11 / through 220Ω resistor to Arduino PIN 11
+- DIG3 (pin 8)  -> przez rezystor 220Ω do Arduino PIN 10 / through 220Ω resistor to Arduino PIN 10
+- DIG4 (pin 6)  -> przez rezystor 220Ω do Arduino PIN 9  / through 220Ω resistor to Arduino PIN 9
+
+Połączenia z rejestrem 74HC595 / 74HC595 shift register connections:
+- Segment A (pin 11) -> 74HC595 QA (pin 15)
+- Segment B (pin 7)  -> 74HC595 QB (pin 1)
+- Segment C (pin 4)  -> 74HC595 QC (pin 2)
+- Segment D (pin 2)  -> 74HC595 QD (pin 3)
+- Segment E (pin 1)  -> 74HC595 QE (pin 4)
+- Segment F (pin 10) -> 74HC595 QF (pin 5)
+- Segment G (pin 5)  -> 74HC595 QG (pin 6)
+- DP (pin 3)        -> 74HC595 QH (pin 7)
+
+Zasada działania / Operation principle:
+1. Wyświetlacz używa multipleksowania - tylko jedna cyfra jest aktywna w danym momencie
+   Display uses multiplexing - only one digit is active at a time
+2. Wspólna anoda (Digit 1-4) musi być w stanie HIGH aby cyfra była aktywna
+   Common anode (Digit 1-4) must be HIGH to activate the digit
+3. Segmenty są aktywne w stanie LOW (wspólna anoda)
+   Segments are active LOW (common anode)
+4. Częstotliwość odświeżania powinna być >60Hz aby uniknąć migotania
+   Refresh frequency should be >60Hz to avoid flickering
+
+Kolejność wyświetlania / Display sequence:
+DIG1 -> DIG2 -> DIG3 -> DIG4 -> DIG1 -> ... (cykl/cycle)
+Przykład / Example: "23.45"
+1. DIG1: "2" -> anoda 12 HIGH, segmenty dla "2"
+2. DIG2: "3" -> anoda 9 HIGH, segmenty dla "3"
+3. DIG3: "4" + dp -> anoda 8 HIGH, segmenty dla "4" + punkt dziesiętny
+4. DIG4: "5" -> anoda 6 HIGH, segmenty dla "5" 

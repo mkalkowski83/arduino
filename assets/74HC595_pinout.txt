@@ -1,0 +1,37 @@
+                    74HC595
+                  ____________
+                 |            |
+          QB (1) |            | (16) VCC
+          QC (2) |            | (15) QA
+          QD (3) |            | (14) SER/DS   [Data]
+          QE (4) |   74HC595  | (13) /OE      [Output Enable]
+          QF (5) |            | (12) RCLK/STCP [Storage Clock]
+          QG (6) |            | (11) SRCLK/SHCP[Shift Clock]
+          QH (7) |            | (10) /SRCLR/MR [Master Reset]
+         GND (8) |            | (9)  QH'
+                 |____________|
+
+Opis pinów / Pin description:
+
+VCC (16)  - Zasilanie / Power supply (+5V)
+GND (8)   - Masa / Ground (0V)
+QA-QH     - Wyjścia równoległe / Parallel outputs
+QH' (9)   - Wyjście szeregowe / Serial output
+/OE (13)  - Włączenie wyjść (aktywne LOW) / Output enable (active LOW)
+SER (14)  - Wejście danych szeregowych / Serial data input
+RCLK (12) - Zatrzask wyjść równoległych / Storage register clock
+SRCLK (11)- Zegar przesuwu / Shift register clock
+/SRCLR(10)- Reset (aktywny LOW) / Clear (active LOW)
+
+Typowe połączenia / Typical connections:
+- VCC -> +5V
+- GND -> GND
+- /OE -> GND (zawsze aktywne) / GND (always enabled)
+- /SRCLR -> VCC (brak resetu) / VCC (no reset)
+- RCLK -> Arduino PIN
+- SRCLK -> Arduino PIN
+- SER -> Arduino PIN
+- QA-QH -> LEDs/Display segments
+
+Uwaga: Piny z "/" są aktywne w stanie niskim
+Note: Pins with "/" are active LOW 

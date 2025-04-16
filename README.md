@@ -1,0 +1,137 @@
+# Kolekcja Projektów Arduino / Arduino Projects Collection
+
+[English version below](#arduino-projects-collection)
+
+Ten repozytorium zawiera zbiór różnych projektów Arduino, które demonstrują różne zastosowania i funkcjonalności. Każdy projekt jest niezależny i pokazuje inne aspekty programowania mikrokontrolerów.
+
+## Projekty
+
+### 1. Wyświetlacz Temperatury (temp_sev_shift)
+Projekt wyświetlacza temperatury na wyświetlaczu 7-segmentowym. [Szczegółowa dokumentacja projektu](temp_sev_shift/README.md)
+
+### 2. Sygnalizacja Świetlna (street_lights)
+- Symuluje działanie sygnalizacji świetlnej na skrzyżowaniu
+- Zawiera światła dla samochodów (czerwone, żółte, zielone)
+- Obsługuje przejście dla pieszych z przyciskiem
+- Implementuje logikę zmiany świateł i bezpieczne przejścia
+
+### 3. Sterowanie RGB (rgb)
+- Kontroluje diodę RGB
+- Reaguje na poziom oświetlenia z fotorezystora
+- Umożliwia tworzenie różnych efektów świetlnych
+- Zawiera funkcje tęczy i płynnych przejść kolorów
+
+### 4. Licznik (Counter)
+- Prosty licznik wyświetlający wartości na wyświetlaczu 7-segmentowym
+- Wykorzystuje bibliotekę SevSeg do sterowania wyświetlaczem
+- Automatyczne zliczanie z możliwością resetowania
+
+### 5. Licznik z Rejestrem Przesuwnym (Counter_shift_register)
+- Podobny do projektu Counter, ale wykorzystuje rejestr przesuwny 74HC595
+- Demonstracja sterowania wyświetlaczem 7-segmentowym przez rejestr przesuwny
+
+## Biblioteki Narzędziowe (libraries/utils)
+
+Projekt zawiera zestaw własnych bibliotek ułatwiających pracę z różnymi komponentami:
+
+- `Button.h` - obsługa przycisków
+- `DisplayManager.h` - zarządzanie wyświetlaczem 7-segmentowym
+- `Photoresistor.h` - obsługa fotorezystora
+- `TempSensor.h` - obsługa czujnika temperatury
+- `TemperatureDisplay.h` - wyświetlanie temperatury
+- `RgbLight.h` - sterowanie diodą RGB
+- `PedestrianLight.h` - obsługa świateł dla pieszych
+- `TrafficLight.h` - obsługa sygnalizacji świetlnej
+
+## Wymagania
+
+- Arduino IDE
+- Płytka Arduino (testowane na Arduino Uno)
+- Biblioteki:
+  - OneWire
+  - DallasTemperature
+  - SevSeg
+
+## Instalacja
+
+1. Sklonuj repozytorium
+2. Zainstaluj wymagane biblioteki przez Arduino Library Manager
+3. Otwórz wybrany projekt w Arduino IDE
+4. Wgraj kod do płytki Arduino
+
+## Schemat Połączeń
+
+Każdy projekt zawiera własne wymagania sprzętowe. Szczegółowe informacje o połączeniach można znaleźć w kodzie źródłowym poszczególnych projektów w postaci komentarzy przy definicjach pinów.
+
+## Licencja
+
+Ten projekt jest dostępny na licencji MIT. Możesz go swobodnie wykorzystywać, modyfikować i rozpowszechniać.
+
+---
+
+# Arduino Projects Collection
+
+This repository contains a collection of various Arduino projects that demonstrate different applications and functionalities. Each project is independent and showcases different aspects of microcontroller programming.
+
+## Projects
+
+### 1. Temperature Display (temp_sev_shift)
+Temperature display project using a 7-segment display. [Detailed project documentation](temp_sev_shift/README.md)
+
+### 2. Traffic Lights (street_lights)
+- Simulates traffic light operation at an intersection
+- Includes car traffic lights (red, yellow, green)
+- Handles pedestrian crossing with button input
+- Implements light change logic and safe crossing sequences
+
+### 3. RGB Control (rgb)
+- Controls RGB LED
+- Responds to light levels using a photoresistor
+- Enables various lighting effects
+- Includes rainbow and smooth color transition functions
+
+### 4. Counter (Counter)
+- Simple counter displaying values on a 7-segment display
+- Uses SevSeg library for display control
+- Automatic counting with reset capability
+
+### 5. Counter with Shift Register (Counter_shift_register)
+- Similar to Counter project but uses 74HC595 shift register
+- Demonstrates 7-segment display control through shift register
+
+## Utility Libraries (libraries/utils)
+
+The project includes a set of custom libraries to facilitate work with various components:
+
+- `Button.h` - button handling
+- `DisplayManager.h` - 7-segment display management
+- `Photoresistor.h` - photoresistor handling
+- `TempSensor.h` - temperature sensor handling
+- `TemperatureDisplay.h` - temperature display
+- `RgbLight.h` - RGB LED control
+- `PedestrianLight.h` - pedestrian light handling
+- `TrafficLight.h` - traffic light handling
+
+## Requirements
+
+- Arduino IDE
+- Arduino Board (tested on Arduino Uno)
+- Libraries:
+  - OneWire
+  - DallasTemperature
+  - SevSeg
+
+## Installation
+
+1. Clone the repository
+2. Install required libraries through Arduino Library Manager
+3. Open desired project in Arduino IDE
+4. Upload code to Arduino board
+
+## Wiring Diagrams
+
+Each project has its own hardware requirements. Detailed connection information can be found in the source code of individual projects in the form of comments near pin definitions.
+
+## License
+
+This project is available under the MIT License. You can freely use, modify, and distribute it. 
