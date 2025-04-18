@@ -1,7 +1,7 @@
-#ifndef RGB_LIGHT_H
-#define RGB_LIGHT_H
+#ifndef RGB_LED_H
+#define RGB_LED_H
 
-class RgbLight {
+class RgbLed {
   private:
     int redPin;
     int greenPin;
@@ -9,7 +9,7 @@ class RgbLight {
     
   public:
     // Constructor
-    RgbLight(int red, int green, int blue) {
+    RgbLed(int red, int green, int blue) {
       redPin = red;
       bluePin = blue;
       greenPin = green;
@@ -43,6 +43,12 @@ class RgbLight {
       digitalWrite(greenPin, HIGH);
     }
     
+    // Set yellow light on (red + green)
+    void turnOnYellow() {
+      digitalWrite(redPin, HIGH);
+      digitalWrite(greenPin, HIGH);
+    }
+    
     // Blink a specific light (red, yellow, or green)
     void blinkLight(int pin, int times, int duration) {
       for (int i = 0; i < times; i++) {
@@ -58,9 +64,16 @@ class RgbLight {
       blinkLight(greenPin, times, duration);
     }
     
-    // Blink yellow light
+    // Blink yellow light - correctly implemented for yellow (red + green)
     void blinkYellow(int times, int duration) {
-      blinkLight(bluePin, times, duration);
+      for (int i = 0; i < times; i++) {
+        // Turn on yellow (red + green)
+        turnOnYellow();
+        delay(duration);
+        // Turn off all
+        allOff();
+        delay(duration);
+      }
     }
     
     // Blink all colors sequentially
@@ -78,6 +91,11 @@ class RgbLight {
         
         // Green
         turnOnGreen();
+        delay(duration);
+        allOff();
+        
+        // Yellow
+        turnOnYellow();
         delay(duration);
         allOff();
         
@@ -135,4 +153,4 @@ class RgbLight {
     }
 };
 
-#endif
+#endif 

@@ -38,10 +38,88 @@ Projekt zawiera zestaw własnych bibliotek ułatwiających pracę z różnymi ko
 - `DisplayManager.h` - zarządzanie wyświetlaczem 7-segmentowym
 - `Photoresistor.h` - obsługa fotorezystora
 - `TempSensor.h` - obsługa czujnika temperatury
-- `TemperatureDisplay.h` - wyświetlanie temperatury
-- `RgbLight.h` - sterowanie diodą RGB
+- `TemperatureDisplayController.h` - kontroler wyświetlania temperatury
+- `RgbLed.h` - sterowanie diodą RGB
 - `PedestrianLight.h` - obsługa świateł dla pieszych
 - `TrafficLight.h` - obsługa sygnalizacji świetlnej
+- `Controller.h` - interfejs dla kontrolerów w systemie
+- `TemperatureColorController.h` - kontroler kolorów LED zależnych od temperatury
+- `TimedExecutor.h` - zarządzanie operacjami wykonywanymi w określonych interwałach czasowych
+- `SystemCoordinator.h` - koordynator działania kontrolerów w systemie
+
+## Nowe Klasy i Ich Użycie
+
+### Wzorzec Projektowy MVC i Struktura Kontrolerów
+
+Projekt wykorzystuje architekturę opartą na wzorcu Model-View-Controller (MVC) oraz wzorce projektowe takie jak Composite i Observer. Oto opis głównych klas:
+
+### Controller.h
+Abstrakcyjny interfejs dla wszystkich kontrolerów w systemie. Definiuje metody:
+```cpp
+virtual void begin() = 0;   // Inicjalizacja kontrolera
+virtual void update() = 0;  // Aktualizacja stanu kontrolera
+virtual const char* getName() { return "GenericController"; }  // Nazwa kontrolera
+```
+
+Użycie:
+```cpp
+class MyController : public Controller {
+public:
+    void begin() override { /* inicjalizacja */ }
+    void update() override { /* aktualizacja */ }
+    const char* getName() override { return "MyController"; }
+};
+```
+
+### TimedExecutor.h
+Klasa zarządzająca operacjami wykonywanymi w określonych odstępach czasu.
+```cpp
+TimedExecutor executor(1000); // Utworzenie z interwałem 1000ms
+if (executor.shouldExecute()) {
+    // Wykonaj operację co 1000ms
+}
+```
+
+### TemperatureDisplayController.h
+Kontroluje wyświetlanie temperatury na wyświetlaczu 7-segmentowym.
+```cpp
+TemperatureDisplayController tempDisplay(tempSensor, display);
+tempDisplay.begin();  // Inicjalizacja
+tempDisplay.update(); // Aktualizacja wyświetlacza
+```
+
+### TemperatureColorController.h
+Steruje kolorem diody LED RGB w zależności od temperatury.
+```cpp
+TemperatureColorController colorCtrl(tempSensor, rgbLed, 
+    36.6, // temperatura niska - zielony
+    37.0, // średnia - żółty
+    38.0, // wysoka - niebieski
+    39.0  // bardzo wysoka - czerwony
+);
+colorCtrl.begin();
+colorCtrl.update();
+```
+
+### RgbLed.h
+Steruje diodą RGB z dodatkowymi efektami świetlnymi.
+```cpp
+RgbLed led(RED_PIN, GREEN_PIN, BLUE_PIN);
+led.turnOnRed();    // Czerwony
+led.turnOnGreen();  // Zielony
+led.turnOnBlue();   // Niebieski
+led.turnOnYellow(); // Żółty (czerwony + zielony)
+led.rainbow(1, 5);  // Efekt tęczy
+```
+
+### SystemCoordinator.h
+Koordynator zarządzający wieloma kontrolerami.
+```cpp
+SystemCoordinator coordinator;
+coordinator.addController(&myController); // Dodanie kontrolera
+coordinator.begin(); // Inicjalizacja wszystkich kontrolerów
+coordinator.update(); // Aktualizacja wszystkich kontrolerów
+```
 
 ## Wymagania
 
@@ -107,10 +185,88 @@ The project includes a set of custom libraries to facilitate work with various c
 - `DisplayManager.h` - 7-segment display management
 - `Photoresistor.h` - photoresistor handling
 - `TempSensor.h` - temperature sensor handling
-- `TemperatureDisplay.h` - temperature display
-- `RgbLight.h` - RGB LED control
+- `TemperatureDisplayController.h` - temperature display controller
+- `RgbLed.h` - RGB LED control
 - `PedestrianLight.h` - pedestrian light handling
 - `TrafficLight.h` - traffic light handling
+- `Controller.h` - interface for system controllers
+- `TemperatureColorController.h` - LED color controller based on temperature
+- `TimedExecutor.h` - managing operations at specified time intervals
+- `SystemCoordinator.h` - system controller coordinator
+
+## New Classes and Their Usage
+
+### MVC Design Pattern and Controller Structure
+
+The project uses an architecture based on the Model-View-Controller (MVC) pattern and design patterns such as Composite and Observer. Here's a description of the main classes:
+
+### Controller.h
+Abstract interface for all controllers in the system. Defines methods:
+```cpp
+virtual void begin() = 0;   // Controller initialization
+virtual void update() = 0;  // Controller state update
+virtual const char* getName() { return "GenericController"; }  // Controller name
+```
+
+Usage:
+```cpp
+class MyController : public Controller {
+public:
+    void begin() override { /* initialization */ }
+    void update() override { /* update */ }
+    const char* getName() override { return "MyController"; }
+};
+```
+
+### TimedExecutor.h
+Class managing operations performed at specified time intervals.
+```cpp
+TimedExecutor executor(1000); // Create with 1000ms interval
+if (executor.shouldExecute()) {
+    // Execute operation every 1000ms
+}
+```
+
+### TemperatureDisplayController.h
+Controls temperature display on a 7-segment display.
+```cpp
+TemperatureDisplayController tempDisplay(tempSensor, display);
+tempDisplay.begin();  // Initialization
+tempDisplay.update(); // Update display
+```
+
+### TemperatureColorController.h
+Controls RGB LED color based on temperature.
+```cpp
+TemperatureColorController colorCtrl(tempSensor, rgbLed, 
+    36.6, // low temperature - green
+    37.0, // medium - yellow
+    38.0, // high - blue
+    39.0  // very high - red
+);
+colorCtrl.begin();
+colorCtrl.update();
+```
+
+### RgbLed.h
+Controls RGB LED with additional lighting effects.
+```cpp
+RgbLed led(RED_PIN, GREEN_PIN, BLUE_PIN);
+led.turnOnRed();    // Red
+led.turnOnGreen();  // Green
+led.turnOnBlue();   // Blue
+led.turnOnYellow(); // Yellow (red + green)
+led.rainbow(1, 5);  // Rainbow effect
+```
+
+### SystemCoordinator.h
+Coordinator managing multiple controllers.
+```cpp
+SystemCoordinator coordinator;
+coordinator.addController(&myController); // Add controller
+coordinator.begin(); // Initialize all controllers
+coordinator.update(); // Update all controllers
+```
 
 ## Requirements
 
