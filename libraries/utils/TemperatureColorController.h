@@ -1,14 +1,14 @@
 #ifndef TEMPERATURE_COLOR_CONTROLLER_H
 #define TEMPERATURE_COLOR_CONTROLLER_H
 
-#include "TempSensor.h"
+#include "TemperatureSensor.h"
 #include "RgbLed.h"
 #include "Controller.h"
 #include "TimedExecutor.h"
 
 class TemperatureColorController : public Controller {
 private:
-  TempSensor& tempSensor;
+  TemperatureSensor& tempSensor;
   RgbLed& rgbLed;
   float tempLow;
   float tempMedium;
@@ -23,28 +23,28 @@ private:
   void setColorBasedOnTemperature() {
     // Always start with all LEDs off
     rgbLed.allOff();
-    
-    // Below low threshold - green (normal/healthy)
+
+    // Below low threshold - blue (cold)
     if (currentTemp < tempLow) {
-      rgbLed.turnOnGreen();
+      rgbLed.turnOnBlue();
       return;
     }
     
     // Between low and medium threshold - yellow (borderline)
     if (currentTemp >= tempLow && currentTemp < tempMedium) {
-      rgbLed.turnOnYellow();
+      rgbLed.turnOnGreen();
       return;
     }
     
     // Between medium and high threshold - blue (high)
     if (currentTemp >= tempMedium && currentTemp < tempHigh) {
-      rgbLed.turnOnBlue();
+      rgbLed.turnOnYellow();
       return;
     }
     
     // Between high and very high threshold - blinking yellow (warning)
     if (currentTemp >= tempHigh && currentTemp < tempVeryHigh) {
-      rgbLed.turnOnYellow();
+      rgbLed.turnOnPurple();
       return;
     }
     
@@ -61,7 +61,7 @@ private:
   }
 
 public:
-  TemperatureColorController(TempSensor& sensor, RgbLed& led, 
+  TemperatureColorController(TemperatureSensor& sensor, RgbLed& led, 
                              float lowThreshold = 22.0, 
                              float mediumThreshold = 23.0, 
                              float highThreshold = 24.0,

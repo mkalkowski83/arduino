@@ -24,29 +24,39 @@ class RgbLed {
     void allOff() {
       digitalWrite(redPin, LOW);
       digitalWrite(bluePin, LOW);
-      digitalWrite(greenPin, LOW);
+      digitalWrite(greenPin, LOW);      
       colorVariation(0, 0, 0);
     }
     
     // Set red light on
     void turnOnRed() {
+      allOff(); // Clear any digital states first
       digitalWrite(redPin, HIGH);
     }
     
     // Set blue light on
     void turnOnBlue() {
+      allOff(); // Clear any digital states first
       digitalWrite(bluePin, HIGH);
     }
     
     // Set green light on
     void turnOnGreen() {
+      allOff(); // Clear any digital states first
       digitalWrite(greenPin, HIGH);
     }
     
     // Set yellow light on (red + green)
     void turnOnYellow() {
+      allOff(); // Clear any digital states first
       digitalWrite(redPin, HIGH);
       digitalWrite(greenPin, HIGH);
+    }
+    
+    // Set purple light on using analog values (red + blue)
+    void turnOnPurple() {
+      allOff(); // Clear any digital states first
+      colorVariation(200, 50, 150); 
     }
     
     // Blink a specific light (red, yellow, or green)

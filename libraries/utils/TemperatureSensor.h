@@ -6,13 +6,13 @@
 
 //Tested on DS18B20 (digital sensor)
 
-class TempSensor {
+class TemperatureSensor {
   private:
     OneWire oneWire;
     DallasTemperature sensors;
     
   public:    
-    TempSensor(int pin) : oneWire(pin), sensors(&oneWire) {
+    TemperatureSensor(int pin) : oneWire(pin), sensors(&oneWire) {
     }
     
     void begin() {
