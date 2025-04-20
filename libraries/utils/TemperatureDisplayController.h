@@ -1,14 +1,14 @@
 #ifndef TEMPERATURE_DISPLAY_CONTROLLER_H
 #define TEMPERATURE_DISPLAY_CONTROLLER_H
 
-#include "TempSensor.h"
+#include "TemperatureSensor.h"
 #include "DisplayManager.h"
 #include "Controller.h"
 #include "TimedExecutor.h"
 
 class TemperatureDisplayController : public Controller {
 private:
-    TempSensor& sensor;
+    TemperatureSensor& sensor;
     DisplayManager& display;
     int currentValue = 0;
     
@@ -33,7 +33,7 @@ private:
     }
 
 public:
-    TemperatureDisplayController(TempSensor& tempSensor, DisplayManager& displayManager)
+    TemperatureDisplayController(TemperatureSensor& tempSensor, DisplayManager& displayManager)
         : sensor(tempSensor), 
           display(displayManager),
           // Initialize executors with their respective intervals
@@ -59,15 +59,18 @@ public:
         // Check if it's time to update temperature
         if (temperatureExecutor.shouldExecute()) {
             updateTemperature();
+            return;
         }
         
         // Check if it's time to update display
         if (displaySetExecutor.shouldExecute()) {
             updateDisplay();
+            return;
         } 
         // Only check for refresh if we didn't just update the display
-        else if (displayRefreshExecutor.shouldExecute()) {
+        if (displayRefreshExecutor.shouldExecute()) {
             refreshDisplay();
+            return;
         }
     }
     

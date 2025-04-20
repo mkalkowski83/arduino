@@ -24,7 +24,7 @@ public:
     void setup() {
         bool resistorsOnSegments = false;
         byte hardwareConfig = COMMON_ANODE;
-        bool updateWithDelays = true; // Biblioteka SevSeg wymaga tego dla stabilnego multipleksowania
+        bool updateWithDelays = true;
         bool leadingZeros = false;
         bool disableDecPoint = false;
         
@@ -34,19 +34,15 @@ public:
     }
     
     void showNumber(int number, int decimalPlaces) {
-        // Zapisz aktualne wartości
         currentNumber = number;
         currentDecimalPlaces = decimalPlaces;
         
-        // Ustaw numer do wyświetlenia
         display.setNumber(number, decimalPlaces);
         
-        // Odśwież wyświetlacz
         display.refreshDisplay();
     }
     
     void refreshCurrentDisplay() {
-        // Tylko odśwież bieżący wyświetlany numer bez zmiany wartości
         display.refreshDisplay();
     }
 };
