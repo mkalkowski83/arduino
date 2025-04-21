@@ -72,10 +72,26 @@ Schematy komponentów:
 - `DisplayManager.h` - zarządzanie wyświetlaczem
 - `RgbLed.h` - sterowanie diodą RGB
 - `Controller.h` - interfejs dla kontrolerów w systemie
-- `TemperatureDisplayController.h` - kontroler wyświetlania temperatury
-- `TemperatureColorController.h` - kontroler kolorów LED zależnych od temperatury
+- `controller/TemperatureDisplayController.h` - kontroler wyświetlania temperatury
+- `controller/TemperatureColorController.h` - kontroler kolorów LED zależnych od temperatury
+- `controller/TemperatureBuzzerController.h` - kontroler sygnału dźwiękowego przy przekroczeniu temperatury
 - `TimedExecutor.h` - zarządzanie operacjami wykonywanymi w określonych interwałach czasowych
 - `SystemCoordinator.h` - koordynator działania kontrolerów w systemie
+- `SerialPortManager.h` - klasa zarządzająca komunikacją przez port szeregowy, zapewniająca bezpieczną inicjalizację i
+  wygodne metody do wysyłania danych
+
+## Struktura Projektu
+
+```
+temp_sev_shift/
+├── temp_sev_shift.ino     - główny plik aplikacji
+├── README.md              - dokumentacja projektu
+├── controller/            - katalog z kontrolerami
+│   ├── TemperatureColorController.h     - kontroler kolorów LED
+│   ├── TemperatureDisplayController.h   - kontroler wyświetlacza
+│   └── TemperatureBuzzerController.h    - kontroler sygnalizacji dźwiękowej
+└── ... inne pliki nagłówkowe
+```
 
 ## Architektura Aplikacji
 
@@ -96,6 +112,8 @@ Projekt wykorzystuje wzorzec projektowy Model-View-Controller (MVC) oraz inne wz
 4. **Utilities**:
    - `TimedExecutor` - zarządzanie operacjami wykonywanymi w określonych interwałach czasu
    - `Controller` - interfejs bazowy dla wszystkich kontrolerów
+   - `SerialPortManager` - zarządzanie komunikacją szeregową; enkapsuluje inicjalizację portu szeregowego i zapewnia
+     metody pomocnicze do przesyłania danych
 
 ## Funkcjonalność
 
@@ -110,6 +128,10 @@ Projekt wykorzystuje wzorzec projektowy Model-View-Controller (MVC) oraz inne wz
    - Niebieski: średnio podwyższona (37.0-38.0°C)
    - Żółty (ostrzegawczy): wysoka (38.0-39.0°C)
    - Czerwony: bardzo wysoka (>39.0°C)
+
+3. **Sygnalizacja Dźwiękowa**:
+    - Aktywacja brzęczyka przy przekroczeniu krytycznej temperatury
+    - Wzór dźwięku: krótkie sygnały z przerwami
 
 ## Konfiguracja
 1. Zainstaluj wymagane biblioteki przez Arduino Library Manager
@@ -191,17 +213,33 @@ Component diagrams:
 - `DisplayManager.h` - display management
 - `RgbLed.h` - RGB LED control
 - `Controller.h` - interface for system controllers
-- `TemperatureDisplayController.h` - temperature display controller
-- `TemperatureColorController.h` - LED color controller based on temperature
+- `controller/TemperatureDisplayController.h` - temperature display controller
+- `controller/TemperatureColorController.h` - LED color controller based on temperature
+- `controller/TemperatureBuzzerController.h` - buzzer controller for temperature threshold alerts
 - `TimedExecutor.h` - managing operations at specified time intervals
 - `SystemCoordinator.h` - system controller coordinator
+- `SerialPortManager.h` - class managing serial port communication, providing safe initialization and convenient methods
+  for sending data
+
+## Project Structure
+
+```
+temp_sev_shift/
+├── temp_sev_shift.ino     - main application file
+├── README.md              - project documentation
+├── controller/            - controllers directory
+│   ├── TemperatureColorController.h     - LED color controller
+│   ├── TemperatureDisplayController.h   - display controller
+│   └── TemperatureBuzzerController.h    - buzzer alert controller
+└── ... other header files
+```
 
 ## Application Architecture
 
 The project uses the Model-View-Controller (MVC) design pattern and other design patterns like Composite and Observer:
 
 1. **Model**:
-   - `TempSensor` - reads temperature from DS18B20 sensor
+    - `TemperatureSensor` - reads temperature from DS18B20 sensor
    
 2. **View**:
    - `DisplayManager` - manages 7-segment display
@@ -215,6 +253,8 @@ The project uses the Model-View-Controller (MVC) design pattern and other design
 4. **Utilities**:
    - `TimedExecutor` - manages operations performed at specified time intervals
    - `Controller` - base interface for all controllers
+   - `SerialPortManager` - manages serial communication; encapsulates serial port initialization and provides helper
+     methods for sending data
 
 ## Functionality
 
@@ -229,6 +269,10 @@ The project uses the Model-View-Controller (MVC) design pattern and other design
    - Blue: moderately elevated (37.0-38.0°C)
    - Yellow (warning): high (38.0-39.0°C)
    - Red: very high (>39.0°C)
+
+3. **Buzzer Alerts**:
+    - Buzzer activation when temperature exceeds critical threshold
+    - Sound pattern: short beeps with pauses
 
 ## Setup
 1. Install required libraries through Arduino Library Manager
