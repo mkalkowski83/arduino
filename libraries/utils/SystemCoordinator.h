@@ -31,11 +31,6 @@ public:
         return true;
     }
     
-    // Alias for addController for backward compatibility
-    bool addControllerAlways(Controller* controller) {
-        return addController(controller);
-    }
-    
     // Initialize all controllers
     void begin() {
         for (uint8_t i = 0; i < controllerCount; i++) {

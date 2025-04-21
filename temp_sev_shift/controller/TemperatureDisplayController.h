@@ -33,13 +33,19 @@ private:
     }
 
 public:
-    TemperatureDisplayController(TemperatureSensor& tempSensor, DisplayManager& displayManager)
+    TemperatureDisplayController(
+        TemperatureSensor& tempSensor, 
+        DisplayManager& displayManager,
+        unsigned long temperatureReadInterval = 5000,   // Default: 5 seconds
+        unsigned long displayUpdateInterval = 5000,     // Default: 5 seconds
+        unsigned long displayRefreshInterval = 1        // Default: 1ms - faster refresh
+    )
         : sensor(tempSensor), 
           display(displayManager),
           // Initialize executors with their respective intervals
-          temperatureExecutor(5000),      // Temperature reading every 5 seconds
-          displaySetExecutor(1000),       // Display update every 1 second
-          displayRefreshExecutor(5) {     // Display refresh every 5ms for smooth multiplexing
+          temperatureExecutor(temperatureReadInterval),
+          displaySetExecutor(displayUpdateInterval),
+          displayRefreshExecutor(displayRefreshInterval) {
     }
 
     // Implementation of begin method from Controller interface
@@ -56,21 +62,20 @@ public:
 
     // Implementation of update method from Controller interface
     void update() override {
+        // Check if it's time to refresh the display first - most important operation
+        if (displayRefreshExecutor.shouldExecute()) {
+            refreshDisplay();
+        }
+        
         // Check if it's time to update temperature
         if (temperatureExecutor.shouldExecute()) {
             updateTemperature();
-            return;
+            updateDisplay(); // Always update display after temperature reading
         }
         
-        // Check if it's time to update display
-        if (displaySetExecutor.shouldExecute()) {
+        // Check if it's time to update display without a temperature change
+        else if (displaySetExecutor.shouldExecute()) {
             updateDisplay();
-            return;
-        } 
-        // Only check for refresh if we didn't just update the display
-        if (displayRefreshExecutor.shouldExecute()) {
-            refreshDisplay();
-            return;
         }
     }
     

@@ -37,15 +37,15 @@ Projekt zawiera zestaw własnych bibliotek ułatwiających pracę z różnymi ko
 - `Button.h` - obsługa przycisków
 - `DisplayManager.h` - zarządzanie wyświetlaczem 7-segmentowym
 - `Photoresistor.h` - obsługa fotorezystora
-- `TempSensor.h` - obsługa czujnika temperatury
-- `TemperatureDisplayController.h` - kontroler wyświetlania temperatury
+- `TemperatureSensor.h` - obsługa czujnika temperatury
 - `RgbLed.h` - sterowanie diodą RGB
 - `PedestrianLight.h` - obsługa świateł dla pieszych
 - `TrafficLight.h` - obsługa sygnalizacji świetlnej
 - `Controller.h` - interfejs dla kontrolerów w systemie
-- `TemperatureColorController.h` - kontroler kolorów LED zależnych od temperatury
 - `TimedExecutor.h` - zarządzanie operacjami wykonywanymi w określonych interwałach czasowych
 - `SystemCoordinator.h` - koordynator działania kontrolerów w systemie
+- `SerialPortManager.h` - klasa zarządzająca komunikacją przez port szeregowy, zapewniająca bezpieczną inicjalizację i
+  wygodne metody do wysyłania danych
 
 ## Nowe Klasy i Ich Użycie
 
@@ -184,15 +184,15 @@ The project includes a set of custom libraries to facilitate work with various c
 - `Button.h` - button handling
 - `DisplayManager.h` - 7-segment display management
 - `Photoresistor.h` - photoresistor handling
-- `TempSensor.h` - temperature sensor handling
-- `TemperatureDisplayController.h` - temperature display controller
+- `TemperatureSensor.h` - temperature sensor handling
 - `RgbLed.h` - RGB LED control
 - `PedestrianLight.h` - pedestrian light handling
 - `TrafficLight.h` - traffic light handling
 - `Controller.h` - interface for system controllers
-- `TemperatureColorController.h` - LED color controller based on temperature
 - `TimedExecutor.h` - managing operations at specified time intervals
 - `SystemCoordinator.h` - system controller coordinator
+- `SerialPortManager.h` - class managing serial port communication, providing safe initialization and convenient methods
+  for sending data
 
 ## New Classes and Their Usage
 
