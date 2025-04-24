@@ -38,7 +38,7 @@ public:
         DisplayManager& displayManager,
         unsigned long temperatureReadInterval = 5000,   // Default: 5 seconds
         unsigned long displayUpdateInterval = 5000,     // Default: 5 seconds
-        unsigned long displayRefreshInterval = 1        // Default: 1ms - faster refresh
+        unsigned long displayRefreshInterval = 0        // Default: 0ms - refresh as fast as possible
     )
         : sensor(tempSensor), 
           display(displayManager),
@@ -62,10 +62,8 @@ public:
 
     // Implementation of update method from Controller interface
     void update() override {
-        // Check if it's time to refresh the display first - most important operation
-        if (displayRefreshExecutor.shouldExecute()) {
-            refreshDisplay();
-        }
+        // Always refresh the display on every loop - critical for smooth display
+        refreshDisplay();
         
         // Check if it's time to update temperature
         if (temperatureExecutor.shouldExecute()) {

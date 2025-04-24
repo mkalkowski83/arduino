@@ -30,7 +30,7 @@ public:
         
         display.begin(hardwareConfig, numDigits, digitPins, segmentPins, 
                      resistorsOnSegments, updateWithDelays, leadingZeros, disableDecPoint);
-        display.setBrightness(90);
+        display.setBrightness(0);
     }
     
     void showNumber(int number, int decimalPlaces) {
@@ -38,8 +38,6 @@ public:
         currentDecimalPlaces = decimalPlaces;
         
         display.setNumber(number, decimalPlaces);
-        
-        display.refreshDisplay();
     }
     
     void refreshCurrentDisplay() {
