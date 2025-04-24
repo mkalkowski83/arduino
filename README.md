@@ -30,6 +30,13 @@ Projekt wyświetlacza temperatury na wyświetlaczu 7-segmentowym. [Szczegółowa
 - Podobny do projektu Counter, ale wykorzystuje rejestr przesuwny 74HC595
 - Demonstracja sterowania wyświetlaczem 7-segmentowym przez rejestr przesuwny
 
+### 6. Termometr LCD (LcdThermometer)
+- Wyświetla temperaturę i wilgotność na wyświetlaczu LCD 16x2
+- Wykorzystuje czujnik AM2302/DHT22
+- Implementuje strukturę MVC z wzorcami projektowymi
+- Wykorzystuje szereg klas narzędziowych do zarządzania komponentami
+- [Szczegółowa dokumentacja projektu](LcdThermometer/README.md) (dostępna również [po polsku](LcdThermometer/README_PL.md))
+
 ## Biblioteki Narzędziowe (libraries/utils)
 
 Projekt zawiera zestaw własnych bibliotek ułatwiających pracę z różnymi komponentami:
@@ -46,6 +53,8 @@ Projekt zawiera zestaw własnych bibliotek ułatwiających pracę z różnymi ko
 - `SystemCoordinator.h` - koordynator działania kontrolerów w systemie
 - `SerialPortManager.h` - klasa zarządzająca komunikacją przez port szeregowy, zapewniająca bezpieczną inicjalizację i
   wygodne metody do wysyłania danych
+- `LcdManager.h` - zarządzanie wyświetlaczem LCD
+- `AM2302Sensor.h` - obsługa czujnika temperatury i wilgotności AM2302/DHT22
 
 ## Nowe Klasy i Ich Użycie
 
@@ -121,6 +130,17 @@ coordinator.begin(); // Inicjalizacja wszystkich kontrolerów
 coordinator.update(); // Aktualizacja wszystkich kontrolerów
 ```
 
+### AM2302LcdController.h
+Kontroler integrujący czujnik AM2302/DHT22 z wyświetlaczem LCD.
+```cpp
+LcdManager lcdManager(12, 11, 5, 4, 3, 2); // Pins: RS, E, D4, D5, D6, D7
+AM2302Sensor sensor(8); // Data pin
+SerialPortManager serialManager(9600);
+AM2302LcdController controller(&lcdManager, &sensor, serialManager);
+controller.begin();
+controller.update();
+```
+
 ## Wymagania
 
 - Arduino IDE
@@ -129,6 +149,8 @@ coordinator.update(); // Aktualizacja wszystkich kontrolerów
   - OneWire
   - DallasTemperature
   - SevSeg
+  - LiquidCrystal
+  - Grove_Temperature_And_Humidity_Sensor
 
 ## Instalacja
 
@@ -177,6 +199,13 @@ Temperature display project using a 7-segment display. [Detailed project documen
 - Similar to Counter project but uses 74HC595 shift register
 - Demonstrates 7-segment display control through shift register
 
+### 6. LCD Thermometer (LcdThermometer)
+- Displays temperature and humidity on a 16x2 LCD display
+- Uses AM2302/DHT22 sensor
+- Implements MVC structure with design patterns
+- Uses various utility classes for component management
+- [Detailed project documentation](LcdThermometer/README.md) (also available [in Polish](LcdThermometer/README_PL.md))
+
 ## Utility Libraries (libraries/utils)
 
 The project includes a set of custom libraries to facilitate work with various components:
@@ -193,6 +222,8 @@ The project includes a set of custom libraries to facilitate work with various c
 - `SystemCoordinator.h` - system controller coordinator
 - `SerialPortManager.h` - class managing serial port communication, providing safe initialization and convenient methods
   for sending data
+- `LcdManager.h` - LCD display management
+- `AM2302Sensor.h` - AM2302/DHT22 temperature and humidity sensor handling
 
 ## New Classes and Their Usage
 
@@ -268,6 +299,17 @@ coordinator.begin(); // Initialize all controllers
 coordinator.update(); // Update all controllers
 ```
 
+### AM2302LcdController.h
+Controller integrating AM2302/DHT22 sensor with LCD display.
+```cpp
+LcdManager lcdManager(12, 11, 5, 4, 3, 2); // Pins: RS, E, D4, D5, D6, D7
+AM2302Sensor sensor(8); // Data pin
+SerialPortManager serialManager(9600);
+AM2302LcdController controller(&lcdManager, &sensor, serialManager);
+controller.begin();
+controller.update();
+```
+
 ## Requirements
 
 - Arduino IDE
@@ -276,6 +318,8 @@ coordinator.update(); // Update all controllers
   - OneWire
   - DallasTemperature
   - SevSeg
+  - LiquidCrystal
+  - Grove_Temperature_And_Humidity_Sensor
 
 ## Installation
 
