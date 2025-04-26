@@ -3,60 +3,42 @@
 
 #include "Controller.h"
 #include "LcdManager.h"
-#include "AM2302Sensor.h"
 #include "TimedExecutor.h"
-#include "SerialPortManager.h"
+#include "../query/AM2302Query.h"
+#include "../service/TemperatureHumidityFormatter.h"
 
 class AM2302LcdController : public Controller {
 private:
+    static const unsigned long UPDATE_INTERVAL = 2000; // ms
+    
     LcdManager* lcdManager;
-    AM2302Sensor* sensor;
+    AM2302Query* query;
     TimedExecutor timedExecutor;
-    SerialPortManager& serialManager;
 
 public:
-    AM2302LcdController(LcdManager* lcdManager, AM2302Sensor* sensor, SerialPortManager& serialManager, unsigned long updateInterval = 2000): 
-    lcdManager(lcdManager), sensor(sensor), serialManager(serialManager), timedExecutor(updateInterval) {
+    AM2302LcdController(LcdManager* lcdManager, AM2302Query* query): 
+    lcdManager(lcdManager), query(query), timedExecutor(UPDATE_INTERVAL) {
     }
-
     
     void begin() override {
-        serialManager.begin();
-        serialManager.println("AM2302LcdController initialized");
         lcdManager->begin();
-        sensor->begin();
+        query->begin();
     }
 
     void update() override {
         // Check if it's time to update the display
         if (timedExecutor.shouldExecute()) {
-            serialManager.println("Attempting to read sensor data...");
-            
-            // Read temperature and humidity separately instead of using readTempAndHumidity
-            float humidity = sensor->readHumidity();
-            float temperature = sensor->readTemperature();
+            // Use the query to read sensor data
+            AM2302Query::SensorData data = query->execute();
             
             char buffer[50];
             
-            // Create combined messages
-            sprintf(buffer, "Humidity: %.2f %%", humidity);
-            serialManager.println(buffer);
+            // Format temperature and humidity values
+            TemperatureHumidityFormatter::format(buffer, data.temperature, data.humidity);
             
-            sprintf(buffer, "Temperature: %.2f C", temperature);
-            serialManager.println(buffer);
-            
-            // Clear the LCD screen
             lcdManager->clearScreen();
-            
-            // Display temperature on the first row
-            lcdManager->printAt(0, 0, "Temp: ");
-            lcdManager->print(temperature);
-            lcdManager->print(" C");
-            
-            // Display humidity on the second row
-            lcdManager->printAt(0, 1, "Humidity: ");
-            lcdManager->print(humidity);
-            lcdManager->print("%");
+            lcdManager->printAt(0, 0, buffer);
+            lcdManager->printAt(0, 1, "Kochana Polcia i TObi:)");
         }
     }
 
