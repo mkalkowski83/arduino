@@ -38,7 +38,6 @@ public:
             
             lcdManager->clearScreen();
             lcdManager->printAt(0, 0, buffer);
-            lcdManager->printAt(0, 1, "Kochana Polcia i TObi:)");
         }
     }
 
