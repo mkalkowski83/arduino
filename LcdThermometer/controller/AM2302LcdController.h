@@ -26,18 +26,19 @@ public:
     }
 
     void update() override {
-        // Check if it's time to update the display
+        lcdManager->updateScrollText();
+        
         if (timedExecutor.shouldExecute()) {
-            // Use the query to read sensor data
             AM2302Query::SensorData data = query->execute();
             
             char buffer[50];
             
-            // Format temperature and humidity values
             TemperatureHumidityFormatter::format(buffer, data.temperature, data.humidity);
             
-            lcdManager->clearScreen();
+            lcdManager->clearRow(0);
             lcdManager->printAt(0, 0, buffer);
+            
+            lcdManager->setScrollText("Temperature and Humidity Monitor - Created by M.K. - Arduino", 1);
         }
     }
 
