@@ -47,9 +47,27 @@ public:
     void setScrollingText(const char* text, uint8_t row) {
         if (row >= rows) return;
         
+        // Buffer size accounting for the extra spaces
+        size_t bufferSize = sizeof(scrollText[row]) - 1;
+        
         // Copy text to scrolling buffer
-        strncpy(scrollText[row], text, sizeof(scrollText[row]) - 1);
-        scrollText[row][sizeof(scrollText[row]) - 1] = '\0';
+        size_t textLen = strlen(text);
+        if (textLen > bufferSize - cols) {
+            textLen = bufferSize - cols; // Ensure we have space for the padding spaces
+        }
+        
+        // Copy the main text
+        strncpy(scrollText[row], text, textLen);
+        
+        // Add spaces to the end to create separation between wrapped text
+        for (int i = 0; i < cols; i++) {
+            if (textLen + i < bufferSize) {
+                scrollText[row][textLen + i] = ' ';
+            }
+        }
+        
+        // Ensure null termination
+        scrollText[row][textLen + cols > bufferSize ? bufferSize : textLen + cols] = '\0';
         
         // Reset scroll position
         scrollPosition[row] = 0;
