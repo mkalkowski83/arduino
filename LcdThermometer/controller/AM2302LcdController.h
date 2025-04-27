@@ -10,35 +10,44 @@
 class AM2302LcdController : public Controller {
 private:
     static const unsigned long UPDATE_INTERVAL = 2000; // ms
+    static const unsigned long SCROLL_INTERVAL = 300; // ms
     
     LcdManager* lcdManager;
     AM2302Query* query;
     TimedExecutor timedExecutor;
+    TimedExecutor scrollExecutor;
 
 public:
     AM2302LcdController(LcdManager* lcdManager, AM2302Query* query): 
-    lcdManager(lcdManager), query(query), timedExecutor(UPDATE_INTERVAL) {
+    lcdManager(lcdManager), query(query), timedExecutor(UPDATE_INTERVAL), scrollExecutor(SCROLL_INTERVAL) {
     }
     
     void begin() override {
         lcdManager->begin();
         query->begin();
+        
+        // Initial setup of display with scrolling text in second row
+        lcdManager->clear();
+        lcdManager->setScrollingText("Temperature and Humidity Monitor - Created by M.K. - Arduino", 1);
     }
 
     void update() override {
-        lcdManager->updateScrollText();
-        
+        // Update sensor data at a slower interval
         if (timedExecutor.shouldExecute()) {
+            // Get sensor data
             AM2302Query::SensorData data = query->execute();
             
+            // Format temperature and humidity for display in first row
             char buffer[50];
-            
             TemperatureHumidityFormatter::format(buffer, data.temperature, data.humidity);
             
-            lcdManager->clearRow(0);
-            lcdManager->printAt(0, 0, buffer);
-            
-            lcdManager->setScrollText("Temperature and Humidity Monitor - Created by M.K. - Arduino", 1);
+            // Update first row with temperature and humidity
+            lcdManager->printAtRow(buffer, 0);
+        }
+        
+        // Update scrolling animation at a faster interval
+        if (scrollExecutor.shouldExecute()) {
+            lcdManager->updateScrolling();
         }
     }
 
