@@ -20,6 +20,24 @@ public:
         }
     }
     
+    void print(const char* message) {
+        if (initialized) {
+            Serial.print(message);
+        }
+    } 
+    
+    void print(int value) {
+        if (initialized) {
+            Serial.print(value);
+        }
+    }
+
+    void print(float value, int precision = 2) {
+        if (initialized) {
+            Serial.print(value, precision);
+        }
+    }
+
     // Helper method for printing
     void println(const char* message) {
         if (initialized) {
