@@ -21,21 +21,15 @@ Projekt wyświetlacza temperatury na wyświetlaczu 7-segmentowym. [Szczegółowa
 - Umożliwia tworzenie różnych efektów świetlnych
 - Zawiera funkcje tęczy i płynnych przejść kolorów
 
-### 4. Licznik (Counter)
-- Prosty licznik wyświetlający wartości na wyświetlaczu 7-segmentowym
-- Wykorzystuje bibliotekę SevSeg do sterowania wyświetlaczem
-- Automatyczne zliczanie z możliwością resetowania
+### 4. Smart Plant Monitor (SmartPlantMonitor)
 
-### 5. Licznik z Rejestrem Przesuwnym (Counter_shift_register)
-- Podobny do projektu Counter, ale wykorzystuje rejestr przesuwny 74HC595
-- Demonstracja sterowania wyświetlaczem 7-segmentowym przez rejestr przesuwny
-
-### 6. Termometr LCD (LcdThermometer)
-- Wyświetla temperaturę i wilgotność na wyświetlaczu LCD 16x2
-- Wykorzystuje czujnik AM2302/DHT22
+- Wyświetla temperaturę, wilgotność powietrza i wilgotność gleby na wyświetlaczu LCD 16x2
+- Wykorzystuje czujnik AM2302/DHT22 oraz czujnik wilgotności gleby
+- Kontroluje pompę wody do automatycznego nawadniania roślin
 - Implementuje strukturę MVC z wzorcami projektowymi
 - Wykorzystuje szereg klas narzędziowych do zarządzania komponentami
-- [Szczegółowa dokumentacja projektu](LcdThermometer/README.md) (dostępna również [po polsku](LcdThermometer/README_PL.md))
+- [Szczegółowa dokumentacja projektu](SmartPlantMonitor/README.md) (dostępna
+  również [po polsku](SmartPlantMonitor/README_PL.md))
 
 ## Biblioteki Narzędziowe (libraries/utils)
 
@@ -192,21 +186,15 @@ Temperature display project using a 7-segment display. [Detailed project documen
 - Enables various lighting effects
 - Includes rainbow and smooth color transition functions
 
-### 4. Counter (Counter)
-- Simple counter displaying values on a 7-segment display
-- Uses SevSeg library for display control
-- Automatic counting with reset capability
+### 4. Smart Plant Monitor (SmartPlantMonitor)
 
-### 5. Counter with Shift Register (Counter_shift_register)
-- Similar to Counter project but uses 74HC595 shift register
-- Demonstrates 7-segment display control through shift register
-
-### 6. LCD Thermometer (LcdThermometer)
-- Displays temperature and humidity on a 16x2 LCD display
-- Uses AM2302/DHT22 sensor
+- Displays temperature, air humidity, and soil moisture on a 16x2 LCD display
+- Uses AM2302/DHT22 sensor and soil moisture sensor
+- Controls water pump for automatic plant watering
 - Implements MVC structure with design patterns
 - Uses various utility classes for component management
-- [Detailed project documentation](LcdThermometer/README.md) (also available [in Polish](LcdThermometer/README_PL.md))
+- [Detailed project documentation](SmartPlantMonitor/README.md) (also
+  available [in Polish](SmartPlantMonitor/README_PL.md))
 
 ## Utility Libraries (libraries/utils)
 
