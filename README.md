@@ -55,6 +55,8 @@ Projekt zawiera zestaw własnych bibliotek ułatwiających pracę z różnymi ko
   wygodne metody do wysyłania danych
 - `LcdManager.h` - zarządzanie wyświetlaczem LCD
 - `AM2302Sensor.h` - obsługa czujnika temperatury i wilgotności AM2302/DHT22
+- `SoilMoistureSensor.h` - obsługa czujnika wilgotności gleby
+- `PumpManager.h` - zarządzanie pompą wody do automatycznego nawadniania
 
 ## Nowe Klasy i Ich Użycie
 
@@ -224,6 +226,8 @@ The project includes a set of custom libraries to facilitate work with various c
   for sending data
 - `LcdManager.h` - LCD display management
 - `AM2302Sensor.h` - AM2302/DHT22 temperature and humidity sensor handling
+- `SoilMoistureSensor.h` - soil moisture sensor handling
+- `PumpManager.h` - water pump management for automatic watering
 
 ## New Classes and Their Usage
 

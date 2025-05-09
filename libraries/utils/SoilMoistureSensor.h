@@ -8,7 +8,7 @@ class SoilMoistureSensor {
     int waterValue;  // Value in water (wet)
     
   public:    
-    SoilMoistureSensor(int pin, int air = 1022, int water = 409) 
+    SoilMoistureSensor(int pin, int air = 1023, int water = 345) 
       : sensorPin(pin), airValue(air), waterValue(water) {
     }
     
@@ -25,7 +25,8 @@ class SoilMoistureSensor {
     // 100% = completely wet (water value)
     int readMoisturePercentage() {
       int rawValue = readRawValue();
-      return map(rawValue, airValue, waterValue, 0, 100);
+      int percentage = map(rawValue, airValue, waterValue, 0, 100);
+      return constrain(percentage, 0, 100);
     }
     
     // Calibrate sensor with new values

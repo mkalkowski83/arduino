@@ -1,20 +1,27 @@
-# Termometr LCD
+# Smart Plant Monitor
 
-Wszechstronny projekt Arduino wyświetlający odczyty temperatury i wilgotności z czujnika AM2302/DHT22 na wyświetlaczu LCD.
+Wszechstronny projekt Arduino do monitorowania i automatycznego nawadniania roślin, wyświetlający odczyty temperatury,
+wilgotności powietrza i wilgotności gleby na wyświetlaczu LCD.
 
 ## Przegląd
 
-Ten projekt tworzy system monitorowania temperatury i wilgotności wykorzystujący:
+Ten projekt tworzy system monitorowania i pielęgnacji roślin wykorzystujący:
+
 - Czujnik temperatury i wilgotności AM2302/DHT22
+- Czujnik wilgotności gleby
+- System automatycznego nawadniania z pompą
 - Wyświetlacz LCD (16x2 znaki)
 - Płytkę Arduino
 
-Kod jest zorganizowany zgodnie z zasadami programowania obiektowego, z oddzielnymi klasami kontrolerów dla różnych funkcjonalności.
+Kod jest zorganizowany zgodnie z zasadami programowania obiektowego, z oddzielnymi klasami kontrolerów dla różnych
+funkcjonalności.
 
 ## Wymagania sprzętowe
 
 - Płytka Arduino (Uno, Nano, Mega, itp.)
 - Czujnik temperatury i wilgotności AM2302/DHT22
+- Czujnik wilgotności gleby
+- Pompa wodna
 - Wyświetlacz LCD 16x2
 - Przewody połączeniowe
 - Płytka prototypowa (opcjonalnie)
@@ -22,6 +29,7 @@ Kod jest zorganizowany zgodnie z zasadami programowania obiektowego, z oddzielny
 ## Instrukcje podłączenia
 
 ### Wyświetlacz LCD
+
 - Pin RS do pinu cyfrowego 12
 - Pin Enable do pinu cyfrowego 11
 - Pin D4 do pinu cyfrowego 5
@@ -35,34 +43,55 @@ Kod jest zorganizowany zgodnie z zasadami programowania obiektowego, z oddzielny
 - K do GND (podświetlenie)
 
 ### Czujnik AM2302/DHT22
+
 - VCC do 5V
 - GND do GND
 - DATA do pinu cyfrowego 8 (może być zmieniony w kodzie)
 
+### Czujnik wilgotności gleby
+
+- VCC do 5V
+- GND do GND
+- DATA do pinu analogowego A0 (może być zmieniony w kodzie)
+
+### Pompa wodna
+
+- VCC do kolektora (C) tranzystora NPN
+- GND do masy (GND)
+- Emiter (E) tranzystora podłączony do GND
+- Baza (B) tranzystora podłączona do pinu cyfrowego 7 przez rezystor 4,3K
+- Dioda zabezpieczająca 1N4001 równolegle do pompy (katoda do VCC, anoda do kolektora)
+
 ## Wymagania programowe
 
 ### Biblioteki
+
 - Grove_Temperature_And_Humidity_Sensor
 - LiquidCrystal
 
 ### Klasy projektu
+
 - **AM2302Sensor**: Wrapper dla czujnika AM2302/DHT22
 - **LcdManager**: Obsługuje operacje wyświetlacza LCD
 - **AM2302LcdController**: Kontroler integrujący czujnik i wyświetlacz
 - **SerialPortManager**: Obsługuje komunikację szeregową
 - **TimedExecutor**: Zarządza operacjami wykonywanymi w określonych odstępach czasu
+- **SoilMoistureSensor**: Obsługuje czujnik wilgotności gleby
+- **PumpManager**: Zarządza pompą wody do automatycznego nawadniania
 
 ## Instalacja
 
 1. Zainstaluj wymagane biblioteki przez Menedżer Bibliotek Arduino
 2. Skopiuj pliki projektu do folderu szkiców Arduino
-3. Otwórz szkic LcdThermometer.ino w IDE Arduino
+3. Otwórz szkic SmartPlantMonitor.ino w IDE Arduino
 4. Dostosuj konfigurację pinów, jeśli to konieczne
 5. Wgraj szkic na płytkę Arduino
 
 ## Użytkowanie
 
-Główny szkic (LcdThermometer.ino) inicjalizuje wszystkie wymagane komponenty i aktualizuje wyświetlacz co 2 sekundy z odczytami temperatury i wilgotności.
+Główny szkic (SmartPlantMonitor.ino) inicjalizuje wszystkie wymagane komponenty i aktualizuje wyświetlacz z odczytami
+temperatury, wilgotności powietrza i wilgotności gleby. System automatycznie uruchamia pompę, gdy poziom wilgotności
+gleby spada poniżej ustawionego progu.
 
 ### Przykładowy szkic
 
@@ -71,12 +100,20 @@ Główny szkic (LcdThermometer.ino) inicjalizuje wszystkie wymagane komponenty i
 #include "utils/LcdManager.h"
 #include "utils/AM2302Sensor.h"
 #include "utils/SerialPortManager.h"
+#include "utils/SoilMoistureSensor.h"
+#include "utils/PumpManager.h"
 
 // Tworzenie menedżera LCD (piny: RS, E, D4, D5, D6, D7)
 LcdManager lcdManager(12, 11, 5, 4, 3, 2);
 
 // Tworzenie czujnika AM2302 (pin danych: 8)
 AM2302Sensor am2302Sensor(8);
+
+// Tworzenie czujnika wilgotności gleby (pin analogowy: A0)
+SoilMoistureSensor soilSensor(A0);
+
+// Tworzenie menedżera pompy (pin sterujący: 7)
+PumpManager pumpManager(7);
 
 // Tworzenie menedżera portu szeregowego z prędkością transmisji
 SerialPortManager serialManager(9600);
@@ -87,28 +124,39 @@ AM2302LcdController am2302LcdController(&lcdManager, &am2302Sensor, serialManage
 void setup() {
   // Inicjalizacja kontrolera (który inicjalizuje wszystkie komponenty)
   am2302LcdController.begin();
+  soilSensor.begin();
+  pumpManager.begin();
 }
 
 void loop() {
-  // Aktualizacja kontrolera (odczyt czujnika i aktualizacja wyświetlacza)
+  // Aktualizacja kontrolerów
   am2302LcdController.update();
+  
+  // Sprawdzenie wilgotności gleby i sterowanie pompą
+  int soilMoisture = soilSensor.readMoisture();
+  if (soilMoisture < 30) { // Jeśli wilgotność < 30%
+    pumpManager.startPump(3000); // Włącz pompę na 3 sekundy
+  }
 }
 ```
 
 ## Dostosowywanie
 
 Możesz dostosować projekt poprzez:
-- Zmianę interwału aktualizacji w konstruktorze AM2302LcdController
-- Modyfikację formatu wyświetlania w klasie AM2302LcdController
+
+- Zmianę interwału aktualizacji w konstruktorach kontrolerów
+- Modyfikację progu wilgotności gleby dla uruchomienia pompy
+- Modyfikację formatu wyświetlania w klasie kontrolera LCD
 - Dodanie dodatkowych czujników lub kontrolerów
 
 ## Rozwiązywanie problemów
 
 Jeśli napotkasz problemy:
+
 1. Sprawdź połączenia przewodów
 2. Zweryfikuj dane wyjściowe portu szeregowego w celu debugowania
-3. Upewnij się, że czujnik AM2302/DHT22 jest prawidłowo zasilany
-4. Spróbuj użyć innego pinu danych dla czujnika
+3. Upewnij się, że czujniki są prawidłowo zasilane
+4. Sprawdź czy pompa jest prawidłowo podłączona
 
 ## Licencja
 

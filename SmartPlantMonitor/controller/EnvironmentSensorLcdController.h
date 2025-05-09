@@ -18,11 +18,22 @@ private:
     SerialPortManager* serialManager;
     TimedExecutor timedExecutor;
     TimedExecutor scrollExecutor;
-
+    
+    bool scrollingInitialized = false;
 
 public:
     EnvironmentSensorLcdController(LcdManager* lcdManager, SensorReadQuery* query, SerialPortManager* serialManager): 
-    lcdManager(lcdManager), query(query), serialManager(serialManager), timedExecutor(UPDATE_INTERVAL), scrollExecutor(SCROLL_INTERVAL) {
+    lcdManager(lcdManager), 
+    query(query), 
+    serialManager(serialManager), 
+    timedExecutor(UPDATE_INTERVAL), 
+    scrollExecutor(SCROLL_INTERVAL) {
+    }
+    
+    ~EnvironmentSensorLcdController() {
+        if (lcdManager != nullptr) {
+            lcdManager->clear();
+        }
     }
     
     void begin() override {
@@ -30,8 +41,10 @@ public:
         query->begin();
         serialManager->begin();
         
-        // Initial setup of display with scrolling text in second row
-        lcdManager->clear();        
+        // Initial setup of display
+        lcdManager->clear();
+        
+        scrollingInitialized = false;
     }
 
     void update() override {
@@ -40,23 +53,20 @@ public:
             // Get sensor data
             SensorReadQuery::SensorData data = query->execute();
             
-            // Format temperature and humidity for display in first row
-            char buffer[70];
+            // Format data for display
+            char buffer[100];
             SensorDataFormatter::format(buffer, data);
             
-            // Append soil moisture to the display output
-            lcdManager->setScrollingText(buffer, 0);
-            
-            // Send soil moisture data to serial port
-            serialManager->println("Soil Moisture Data: ");
-            serialManager->print(data.soilMoisturePercentage, 2);
-            serialManager->println("");
-            serialManager->println("Raw Value: ");
-            serialManager->print(data.soilMoistureRawValue);
-            serialManager->println("");
+            // Update scrolling text without resetting position
+            if (scrollingInitialized) {
+                lcdManager->updateScrollingTextContent(buffer, 0);
+            } else {
+                // Initial setup if not done in begin() for some reason
+                lcdManager->setScrollingText(buffer, 0);
+                scrollingInitialized = true;
+            }
         }
 
-        
         // Update scrolling animation at a faster interval
         if (scrollExecutor.shouldExecute()) {
             lcdManager->updateScrolling();

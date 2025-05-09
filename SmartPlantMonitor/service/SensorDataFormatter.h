@@ -15,7 +15,7 @@ public:
         int tempInt = (int)(temperature * 100);
         int humInt = (int)(humidity * 100);
         // Display as integers with implicit decimal point
-        sprintf(buffer, "Temp. %d.%02d%cC %d.%02d%%", tempInt / 100, tempInt % 100, DEGREE_SYMBOL, humInt / 100, humInt % 100);
+        sprintf(buffer, "%d.%02d%cC %d.%02d%%", tempInt / 100, tempInt % 100, DEGREE_SYMBOL, humInt / 100, humInt % 100);
     }
     
     // Format sensor data object into a string
@@ -24,6 +24,10 @@ public:
         int tempInt = (int)(data.temperature * 100);
         int humInt = (int)(data.humidity * 100);
         sprintf(buffer, "Temp. %d.%02d%cC Hum. %d.%02d%% Soil:%d%%", tempInt / 100, tempInt % 100, DEGREE_SYMBOL, humInt / 100, humInt % 100, data.soilMoisturePercentage);
+    }
+
+    static void format(char* buffer, int soilMoisturePercentage) {
+        sprintf(buffer, "Soil: %d%", soilMoisturePercentage);
     }
 };
 
